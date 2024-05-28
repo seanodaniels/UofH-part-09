@@ -8,7 +8,7 @@ interface ExerciseResult {
     average: number;
 }
 
-const calculatExercise = (daily_exercise_hours: Array<number>, target_amount: number): ExerciseResult => {
+const calculatExercise = (target_amount: number, daily_exercise_hours: Array<number>) => {
     const num_days = daily_exercise_hours.length;
     const num_training_days = daily_exercise_hours.reduce((acc, curr) => curr !== 0 ? acc += 1 : acc, 0);
     const target_value = target_amount;
@@ -44,8 +44,51 @@ const calculatExercise = (daily_exercise_hours: Array<number>, target_amount: nu
         average: average_time,
     }
     
-    return return_object
+    // return return_object
+    console.log(return_object)
 
 }
 
-console.log(calculatExercise([3, 0, 2, 4.5, 0, 3, 1], 2))
+interface ExerciseDescriptors {
+    target_hours: number;
+    exercised_hours: number[];
+}
+
+const parseArgs = (args: string[]): ExerciseDescriptors => {
+    if (args.length < 4) throw new Error('Not enough arguments. Please provide hours exercised and target hours exercised.');
+
+    // numberTest will be > 0 if there are any non-numbers in the arguments
+    const numberTest = args.slice(3).reduce((acc, curr) => isNaN(Number(curr)) ? acc += 1 : acc += 0, 0);
+
+    if (Number(numberTest) === 0) {
+
+        // return all args except first arg as an array of numbers
+        const exercisedArray = (args: string[]): Array<number> => {
+            const ArrValue = Array.from(args).map(v => Number(v));
+            const ArrSliced = ArrValue.slice(3);
+            return ArrSliced;
+        }
+
+        const targetHours = Number(args[2]);
+        const exercisedHours = exercisedArray(args);
+
+        return {
+            target_hours: targetHours,
+            exercised_hours: exercisedHours
+        }
+    } else {
+        throw new Error('Arguments must be numbers.');
+    }
+}
+
+try {
+    const { target_hours, exercised_hours } = parseArgs(process.argv);
+    console.log(calculatExercise(target_hours, exercised_hours));
+} catch (error: unknown) {
+    let errorMessage = 'Something bad happened.';
+    if (error instanceof Error) {
+        errorMessage += ' Error: ' + error.message;
+    }
+    console.log(errorMessage);
+
+}
