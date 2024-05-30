@@ -4,7 +4,13 @@ and weight (in kilograms) and then returns a message that suits the results.
 BMI = body mass / (body height) ^ 2 kg/m^2
 */
 
-const calculateBmi = (height_cm: number, weight_kg: number) => {
+interface bmiResponse {
+    weight: number;
+    height: number;
+    bmi: string;
+}
+
+const calculateBmi = (height_cm: number, weight_kg: number):bmiResponse => {
     const height_m = (height_cm / 100);
     const bmi = (weight_kg / (height_m ** 2));
 
@@ -40,40 +46,14 @@ const calculateBmi = (height_cm: number, weight_kg: number) => {
             break;
     }
 
-    console.log(judgement);
+    // create return formatted as the interface bmiResponse
+    const result = {
+        weight: weight_kg,
+        height: height_cm,
+        bmi: judgement
+    };
+
+    return result;
 }
 
-// const arg_2: number = Number(process.argv[2])
-// const arg_3: number = Number(process.argv[3])
-
-interface BodyDescriptors {
-    height: number;
-    weight: number;
-}
-
-const parseArgs = (args: string[]): BodyDescriptors => {
-    if (args.length < 4) throw new Error('Not enough arguments. Please provide height(cm) and weight(kg).');
-    if (args.length > 4) throw new Error('Too many arguments. Please provide height(cm) and weight(kg).');
-
-    if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
-        return {
-            height: Number(args[2]),
-            weight: Number(args[3])
-        }
-    } else {
-        throw new Error('Arguments must be numbers.');
-    }
-}
-
-try {
-    const { height, weight } = parseArgs(process.argv);
-    calculateBmi(height, weight);
-} catch (error: unknown) {
-    let errorMessage = 'Something bad happened.';
-    if (error instanceof Error) {
-        errorMessage += ' Error: ' + error.message;
-    }
-    console.log(errorMessage);
-
-}
-
+export default calculateBmi
