@@ -42,7 +42,7 @@ const calculateBmi = (height_cm: number, weight_kg: number):bmiResponse => {
             judgement = 'Obese (Class III)';
             break;
         default:
-            judgement = 'ERROR'
+            judgement = 'ERROR';
             break;
     }
 
@@ -54,6 +54,6 @@ const calculateBmi = (height_cm: number, weight_kg: number):bmiResponse => {
     };
 
     return result;
-}
+};
 
-export default calculateBmi
+export default calculateBmi;

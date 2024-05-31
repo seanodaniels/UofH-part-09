@@ -13,24 +13,24 @@ const calculatExercise = (target_amount: number, daily_exercise_hours: Array<num
     const num_training_days = daily_exercise_hours.reduce((acc, curr) => curr !== 0 ? acc += 1 : acc, 0);
     const target_value = target_amount;
     const total_time = daily_exercise_hours.reduce((acc, curr) => acc + curr);
-    const average_time = total_time / num_days
-    const rating_met = average_time >= target_value ? true : false
+    const average_time = total_time / num_days;
+    const rating_met = average_time >= target_value ? true : false;
     const rating_description = average_time >= target_value 
         ? 'Number of hours have been met. Good job!'
-        : 'Number of hours not met. Do better next time.'
+        : 'Number of hours not met. Do better next time.';
     
 
     const calculate_rating_value = (averageTime: number, targetValue: number) => {
-        if (average_time > target_value) {
+        if (averageTime > targetValue) {
             return 2;
         }
     
-        if (average_time === target_value) {
+        if (averageTime === targetValue) {
             return 1;
         }
     
-        return 0       
-    }
+        return 0;       
+    };
 
     const rating_value = calculate_rating_value(average_time, target_value);
 
@@ -42,11 +42,11 @@ const calculatExercise = (target_amount: number, daily_exercise_hours: Array<num
         ratingDescription: rating_description,
         target: target_value,
         average: average_time,
-    }
+    };
     
-    return return_object
+    return return_object;
 
-}
+};
 
 interface ExerciseDescriptors {
     target_hours: number;
@@ -66,7 +66,7 @@ const parseExerciseDescriptors = (args: string[]): ExerciseDescriptors => {
             const ArrValue = Array.from(args);
             const ArrSliced = ArrValue.slice(3).map(v => Number(v));
             return ArrSliced;
-        }
+        };
 
         const targetHours = Number(args[2]);
         const exercisedHours = exercisedArray(args);
@@ -76,13 +76,13 @@ const parseExerciseDescriptors = (args: string[]): ExerciseDescriptors => {
         const returnValue =  {
             target_hours: targetHours,
             exercised_hours: exercisedHours
-        }
+        };
 
-        return returnValue 
+        return returnValue; 
     } else {
         throw new Error('Arguments must be numbers.');
     }
-}
+};
 
 try {
     const { target_hours, exercised_hours } = parseExerciseDescriptors(process.argv);
@@ -96,4 +96,4 @@ try {
 
 }
 
-export default calculatExercise
+export default calculatExercise;
