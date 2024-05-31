@@ -8,7 +8,7 @@ interface ExerciseResult {
     average: number;
 }
 
-const calculatExercise = (target_amount: number, daily_exercise_hours: Array<number>): ExerciseResult => {
+const calculateExercise = (daily_exercise_hours: Array<number>, target_amount: number): ExerciseResult => {
     const num_days = daily_exercise_hours.length;
     const num_training_days = daily_exercise_hours.reduce((acc, curr) => curr !== 0 ? acc += 1 : acc, 0);
     const target_value = target_amount;
@@ -48,52 +48,4 @@ const calculatExercise = (target_amount: number, daily_exercise_hours: Array<num
 
 };
 
-interface ExerciseDescriptors {
-    target_hours: number;
-    exercised_hours: number[];
-}
-
-const parseExerciseDescriptors = (args: string[]): ExerciseDescriptors => {
-    if (args.length < 4) throw new Error('Not enough arguments. Please provide hours exercised and target hours exercised.');
-
-    // numberTest will be > 0 if there are any non-numbers in the arguments
-    const numberTest = args.slice(3).reduce((acc, curr) => isNaN(Number(curr)) ? acc += 1 : acc += 0, 0);
-
-    if (Number(numberTest) === 0) {
-
-        // return all args except first arg as an array of numbers
-        const exercisedArray = (args: string[]): Array<number> => {
-            const ArrValue = Array.from(args);
-            const ArrSliced = ArrValue.slice(3).map(v => Number(v));
-            return ArrSliced;
-        };
-
-        const targetHours = Number(args[2]);
-        const exercisedHours = exercisedArray(args);
-
-        
-
-        const returnValue =  {
-            target_hours: targetHours,
-            exercised_hours: exercisedHours
-        };
-
-        return returnValue; 
-    } else {
-        throw new Error('Arguments must be numbers.');
-    }
-};
-
-try {
-    const { target_hours, exercised_hours } = parseExerciseDescriptors(process.argv);
-    console.log(calculatExercise(target_hours, exercised_hours));
-} catch (error: unknown) {
-    let errorMessage = 'Something bad happened.';
-    if (error instanceof Error) {
-        errorMessage += ' Error: ' + error.message;
-    }
-    console.log(errorMessage);
-
-}
-
-export default calculatExercise;
+export default calculateExercise;
