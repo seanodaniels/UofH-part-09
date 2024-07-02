@@ -13,7 +13,8 @@ app.get('/api/ping', (_req, res) => {
     res.send('pong')
 })
 
-app.use('/api/diagnoses', patientorRouter)
+// app.use('/api/diagnoses', patientorRouter)
+app.use('/api', patientorRouter)
 
 app.listen(PORT, () => {
     console.log(`listening on port ${PORT}`)

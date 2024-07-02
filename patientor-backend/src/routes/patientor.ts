@@ -3,9 +3,14 @@ import patientorService from '../services/patientorService'
 
 const router = express.Router()
 
-router.get('/', (_req, res) => {
+router.get('/diagnoses', (_req, res) => {
     console.log('req for diagnoses')
-    res.send(patientorService.getEntries())
+    res.send(patientorService.getDiagnoses())
+})
+
+router.get('/patients', (_req, res) => {
+    console.log('req for diagnoses')
+    res.send(patientorService.getSecurePatients())
 })
 
 export default router
