@@ -2,7 +2,7 @@ import { Diagnoses } from "../src/types";
 
 const data: Diagnoses[] = [
     {
-      "code": "M24.2c",
+      "code": "M24.2",
       "name": "Disorder of ligament",
       "latin": "Morbositas ligamenti"
     },
