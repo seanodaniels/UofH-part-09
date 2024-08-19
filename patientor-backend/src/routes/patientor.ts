@@ -13,11 +13,8 @@ router.get('/patients', (_req, res) => {
     res.send(patientorService.getSecurePatients())
 })
 
-router.get('/patients/:id', (req, res) => {
-    
-    
-    const patient = patientorService.findSecurePatient(req.params.id)
-    
+router.get('/patients/:id', (req, res) => {      
+    const patient = patientorService.findSecurePatient(req.params.id)    
     if (patient) {
         res.send(patient)
     } else {
@@ -25,9 +22,18 @@ router.get('/patients/:id', (req, res) => {
     }
 })
 
-router.post('/patients', (_req, res) => {
+router.post('/patients', (req, res) => {
     console.log('req for patients post')
-    res.send(patientorService.addPatients())
+
+    const { name, dateOfBirth, ssn, gender, occupation } = req.body
+    const addedPatient = patientorService.addPatient(
+        name,
+        dateOfBirth,
+        ssn,
+        gender,
+        occupation
+    )
+    res.json(addedPatient)
 })
 
 export default router
