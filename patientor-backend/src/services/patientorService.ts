@@ -3,8 +3,7 @@ import patientData from '../../data/patients'
 import { v1 as uuid } from 'uuid'
 
 import { Diagnoses } from '../types'
-// import { Patient, NewPatient, SecurePatientData } from '../types'
-import { Patient, SecurePatientData } from '../types'
+import { Patient, NewPatient, SecurePatientData } from '../types'
 
 const getDiagnoses = ():Diagnoses[] => {
     return diagnosesData
@@ -21,31 +20,15 @@ const getSecurePatients = (): SecurePatientData[] => {
     )
 }
 
-// const addPatient = ( entry: NewPatient ): Patient => {
-//     const newPatient = {
-//         id: uuid(),
-//         ...entry
-//     }
-//     patientData.push(newPatient)
-//     return newPatient
-// }
-
-const addPatient = (
-    name: string, dateOfBirth: string, ssn: string, gender: string, occupation: string
-    ): Patient => {
-
+const addPatient = ( entry: NewPatient ): Patient => {
     const newPatient = {
         id: uuid(),
-        name,
-        dateOfBirth,
-        ssn,
-        gender,
-        occupation
+        ...entry
     }
-
     patientData.push(newPatient)
     return newPatient
 }
+
 
 const findSecurePatient = (id: string): SecurePatientData | undefined => {
     console.log(`patient lookup for ${id}`)
