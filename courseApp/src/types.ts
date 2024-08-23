@@ -1,16 +1,28 @@
-export interface HeaderProps {
-  courseName: string
+interface CoursePartBase {
+  name: string;
+  exerciseCount: number;
 }
 
-export interface TotalProps {
-  totalExercises: number
+interface CoursePartWithDescription extends CoursePartBase {
+  description: string;
 }
 
-interface CourseParts {
-  name: string,
-  exerciseCount: number
+interface CoursePartBasic extends CoursePartWithDescription {
+  kind: "basic"
 }
+
+interface CoursePartGroup extends CoursePartBase {
+  groupProjectCount: number;
+  kind: "group"
+}
+
+interface CoursePartBackground extends CoursePartWithDescription {
+  backgroundMaterial: string;
+  kind: "background"
+}
+
+export type CoursePart = CoursePartBasic | CoursePartGroup | CoursePartBackground;
 
 export interface ContentProps {
-  courseParts: Array<CourseParts>
+  courseParts: Array<CoursePart>
 }
