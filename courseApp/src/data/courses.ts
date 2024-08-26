@@ -31,5 +31,5 @@ export const courseParts: CoursePart[] = [
     exerciseCount: 10,
     description: "a hard part",
     kind: "basic",
-  },
-];
+  }
+]
