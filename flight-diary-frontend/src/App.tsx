@@ -1,13 +1,6 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
-
-interface Diary {
-  id: number,
-  date: string,
-  weather: string,
-  visibility: string,
-  comment?: string
-}
+import { Diary } from './types'
 
 const App = () => {
   const [diaries, setDiaries] = useState<Diary[]>([])
