@@ -8,10 +8,10 @@ import './App.css'
 const App = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const [diaries, setDiaries] = useState<Diary[]>([])
-  const [newDate, setNewDate] = useState('2024-08-29')
-  const [newWeather, setNewWeather] = useState('sunny')
-  const [newVisibility, setNewVisibility] = useState('good')
-  const [newComment, setNewComment] = useState('comment')
+  const [newDate, setNewDate] = useState('')
+  const [newWeather, setNewWeather] = useState('')
+  const [newVisibility, setNewVisibility] = useState('')
+  const [newComment, setNewComment] = useState('')
  
 
   useEffect(() => {
@@ -27,7 +27,6 @@ const App = () => {
       visibility: newVisibility,
       comment: newComment
     }
-    // setDiaries(diaries.concat(diaryToAdd))
 
     createDiary(diaryToAdd)
       .then(data => {
@@ -47,16 +46,43 @@ const App = () => {
       })
   }
 
+  const chooseWeather = (value: string) => {
+    setNewWeather(value)
+  }
+
+  const chooseVisibility = (value: string) => {
+    setNewVisibility(value)
+  }
+
   return (
     <div id="main-body">      
       <div id="add-diary">
         <h2>Add new entry</h2>
         <Notification message={errorMessage}/>
         <form onSubmit={createNewDiary}>
-          date: <input value={newDate} onChange={(event) => setNewDate(event.target.value)} /><br />
-          weather: <input value={newWeather} onChange={(event) => setNewWeather(event.target.value)} /><br />
-          visibility: <input value={newVisibility} onChange={(event) => setNewVisibility(event.target.value)} /><br />
-          comment: <input value={newComment} onChange={(event) => setNewComment(event.target.value)} /><br />
+          <div className='form-element'>
+            <strong>date:</strong><br />
+            <input type="date" value={newDate} onChange={(event) => setNewDate(event.target.value)} />
+          </div>
+          <div className='form-element'>
+            <strong>weather:</strong> <br />
+            sunny<input type="radio" name="weather-filter" onChange={() => chooseWeather('sunny')} /><br />
+            rainy<input type="radio" name="weather-filter" onChange={() => chooseWeather('rainy')} /><br />
+            cloudy<input type="radio" name="weather-filter" onChange={() => chooseWeather('cloudy')} /><br />
+            stormy<input type="radio" name="weather-filter" onChange={() => chooseWeather('stormy')} /><br />
+            windy<input type="radio" name="weather-filter" onChange={() => chooseWeather('windy')} />
+          </div>
+          <div className='form-element'>
+            <strong>visibility:</strong> <br />
+            great<input type="radio" name="visibility-filter" onChange={() => chooseVisibility('great')} /><br />
+            good<input type="radio" name="visibility-filter" onChange={() => chooseVisibility('good')} /><br />
+            ok<input type="radio" name="visibility-filter" onChange={() => chooseVisibility('ok')} /><br />
+            poor<input type="radio" name="visibility-filter" onChange={() => chooseVisibility('poor')} />
+          </div>
+          <div className='form-element'>
+            <strong>comment:</strong><br />
+            <input value={newComment} onChange={(event) => setNewComment(event.target.value)} />
+          </div>
         <button type='submit'>add</button>
         </form>
       </div>
