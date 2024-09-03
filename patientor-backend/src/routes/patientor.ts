@@ -14,8 +14,9 @@ router.get('/patients', (_req, res) => {
     res.send(patientorService.getSecurePatients())
 })
 
-router.get('/patients/:id', (req, res) => {      
-    const patient = patientorService.findSecurePatient(req.params.id)    
+router.get('/patients/:id', (req, res) => {
+    console.log('req for specific patient')
+    const patient = patientorService.findSecurePatient(req.params.id)
     if (patient) {
         res.send(patient)
     } else {
