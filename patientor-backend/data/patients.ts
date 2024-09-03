@@ -32,7 +32,7 @@ const data = [
         "dateOfBirth": "1974-01-05",
         "ssn": "050174-432N",
         "gender": "female",
-        "occupation": "Forensic Pathologist"
+        "occupation": "Forensic Pathologist",
     },
     {
         "id": "d2773c6e-f723-11e9-8f0b-362b9e155667",

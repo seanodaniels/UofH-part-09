@@ -20,6 +20,7 @@ const create = async (object: PatientFormValues) => {
   return data;
 };
 
+
 export default {
   getAll, create
 };

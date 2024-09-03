@@ -43,6 +43,13 @@ const parseOccupation = (occupation: unknown): string => {
   return occupation
 }
 
+// const parseEntries = (entries: unknown): Array<string> => {
+//   if (!Array.isArray(entries)) {
+//     throw new Error('Incorrect or missing entries.')
+//   }
+//   return entries
+// }
+
 const toNewPatientEntry = (object: unknown): NewPatient => {
   if (!object || typeof object !== 'object') {
     throw new Error('Incorrect or missing data.')
@@ -60,7 +67,8 @@ const toNewPatientEntry = (object: unknown): NewPatient => {
       dateOfBirth: parseDateOfBirth(object.dateOfBirth),
       ssn: parseSSN(object.ssn),
       gender: parseGender(object.gender),
-      occupation: parseOccupation(object.occupation)
+      occupation: parseOccupation(object.occupation),
+      entries: []
     }
     return newEntry
   }
