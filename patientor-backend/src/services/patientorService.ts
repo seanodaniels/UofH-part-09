@@ -1,5 +1,5 @@
 import diagnosesData from '../../data/diagnoses'
-import patientData from '../../data/patients'
+import patientData from '../../data/patients-full'
 import { v1 as uuid } from 'uuid'
 
 import { Diagnoses } from '../types'
