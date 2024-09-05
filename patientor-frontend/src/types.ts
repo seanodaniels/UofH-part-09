@@ -13,10 +13,11 @@ export enum Gender {
 export interface Patient {
   id: string;
   name: string;
-  occupation: string;
-  gender: Gender;
-  ssn?: string;
   dateOfBirth?: string;
+  ssn?: string;
+  gender: Gender;
+  occupation: string;
+  entries: Entry[];
 }
 
 interface BaseEntry {
@@ -40,8 +41,8 @@ interface Discharge {
 }
 
 interface SickLeave {
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
 }
 
 interface HealthCheckEntry extends BaseEntry {
@@ -51,6 +52,7 @@ interface HealthCheckEntry extends BaseEntry {
 
 interface OccupationalHealthcareEntry extends BaseEntry {
   type: "OccupationalHealthcare";
+  employerName: string;
   sickLeave?: SickLeave;
 }
 
