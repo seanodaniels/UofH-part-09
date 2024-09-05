@@ -36,7 +36,7 @@ export enum HealthCheckRating {
 }
 
 interface Discharge {
-  date: Date;
+  date: string;
   criteria?: string;
 }
 

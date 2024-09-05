@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useMatch } from 'react-router-dom';
 import patientService from "../../services/patients";
 import { Patient, Entry } from "../../types";
+import { Favorite } from '@mui/icons-material';
 
 const PatientDetail = () => {
   const match = useMatch('/patient/:key');
@@ -26,26 +27,96 @@ const PatientDetail = () => {
 
   }, [match?.params.key]);
 
+  const DisplayHeart = ({ heartType }: DisplayHeartProps) => {
+    switch(heartType) {
+      case 0:
+        return <Favorite style={{ color: 'green' }}  />
+        break;
+      case 1:
+        return <Favorite style={{ color: 'yellow' }}  />
+        break;
+      case 2: 
+        return <Favorite style={{ color: 'red' }}  />
+        break;
+      default:
+        break;
+    }
+  };
+
+  interface DisplayHeartProps {
+    heartType: number;
+  }
+
   interface EntriesProps {
     theEntries: Entry[];
   }
+
+  interface EntryProps {
+    entry: Entry;
+  }
+
+  const theEntries = patientInfo?.entries;
+
+  const DisplayEntryBasics = ({ entry }: EntryProps) => {
+    return (
+      <div>        
+        <p><strong>{entry.date}</strong> (Diagnosed by {entry.specialist})<br />
+        <em>{entry.description}</em></p>
+          {entry.diagnosisCodes && entry.diagnosisCodes.length > 0
+            ? <div>
+                 Diagnosis Codes:<br />
+                { entry.diagnosisCodes.map(c => <div>- {c}<br /></div>) }
+              </div>
+            : null
+          }
+      </div>
+    );
+  };
 
   const DisplayEntries = ({ theEntries }: EntriesProps) => {
     return (
       <div>
         <h3>Entries</h3>
-        {theEntries.map(p => {
-            return (
-              <div>
-                <p>{p.date} {p.description}</p>
-                <ul>
-                  {p.diagnosisCodes && p.diagnosisCodes.length > 0
-                    ? p.diagnosisCodes.map(c => <li>{c}</li>)
-                    : null
-                  }
-                </ul>
-              </div>
-            );
+        {
+          theEntries.map(p => {
+            switch (p.type) {
+              case "HealthCheck":
+                return (
+                  <div className="entryContainer">
+                    <DisplayEntryBasics entry={p} />
+                    <p><DisplayHeart heartType={p.healthCheckRating} /></p>
+                  </div>
+                );
+                break;
+              case "OccupationalHealthcare":
+                return  (
+                  <div className="entryContainer">
+                    <DisplayEntryBasics entry={p} />
+                    <p>Employer Name: {p.employerName}<br />
+                    { p.sickLeave 
+                      ? <span>Sick Leave: {p.sickLeave.startDate} to {p.sickLeave.endDate}</span>
+                      : null
+                    }
+                    </p>
+                  </div>
+                );
+                break;
+              case "Hospital": 
+                return (
+                  <div className="entryContainer">
+                    <DisplayEntryBasics entry={p} />
+                    <p>Discharge date: {p.discharge.date}<br />
+                    { p.discharge.criteria
+                      ? p.discharge.criteria
+                      : null
+                    }
+                    </p>
+                  </div>
+                );
+                break;
+              default: 
+                break;
+            }
           }
         )}
       </div>
@@ -55,8 +126,6 @@ const PatientDetail = () => {
   if (!patientInfo && !errorMessage) {
     return <div>Loading...</div>;
   }
-
-  const theEntries = patientInfo?.entries;
 
   return (
     <div>
