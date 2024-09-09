@@ -2,9 +2,38 @@
   color: #dd0000;
 }
 
+
+
+body {
+  margin: 0;
+  padding: 1em;
+}
+
+a:link {
+  color: #333333;
+}
+
+a:visited {
+  color: #444444;
+}
+
+
+a:hover {
+  color: #6d1b7b;
+}
+
+
+a:active {
+  color: #888888;
+}
+
+a.MuiButton-root {
+  color: #fff;
+}
+
 .entryContainer {
+  border: 1px solid #000000;
   padding: 0.25rem 1rem 0.5rem 1rem;
   margin: 0 0 1rem 0;
-  border: 1px solid black;
   border-radius: 1rem;
 }

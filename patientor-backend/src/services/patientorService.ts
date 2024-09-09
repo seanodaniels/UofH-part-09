@@ -2,10 +2,10 @@ import diagnosesData from '../../data/diagnoses'
 import patientData from '../../data/patients-full'
 import { v1 as uuid } from 'uuid'
 
-import { Diagnoses } from '../types'
+import { Diagnosis } from '../types'
 import { Patient, NewPatient, SecurePatientData, NonSensitivePatient } from '../types'
 
-const getDiagnoses = (): Diagnoses[] => {
+const getDiagnoses = (): Diagnosis[] => {
     return diagnosesData
 }
 
