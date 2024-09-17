@@ -1,15 +1,33 @@
-import { Entry, NewPatient, Gender, NewEntries, Diagnosis, Discharge } from './types'
+import {
+  Entry,
+  NewPatient,
+  Gender,
+  NewEntries,
+  Diagnosis,
+  Discharge,
+  SickLeave,
+  dummySickLeave,
+  dummyDischarge
+} from './types'
 
-const isString = (text: unknown): text is string => {
-  return typeof text === 'string' || text instanceof String
+const isString = (data: unknown): data is string => {
+  return typeof data === 'string' || data instanceof String
 }
 
-const isGender = (text: string): text is Gender => {
-  return Object.values(Gender).map(g => g.toString()).includes(text)
+const isGender = (data: string): data is Gender => {
+  return Object.values(Gender).map(g => g.toString()).includes(data)
 }
 
-const isEntriesArray = (params: unknown): params is Array<Entry> => {
-  return Array.isArray(params)
+const isSickLeave = (obj: object): obj is SickLeave => {
+  return (
+    obj !== null
+    && typeof obj === 'object'
+    && Object.keys(dummySickLeave).every(k => Object.keys(obj).includes(k))
+  )
+}
+
+const isEntriesArray = (data: unknown): data is Array<Entry> => {
+  return Array.isArray(data)
 }
 
 const isEntriesObject = (obj: unknown): obj is object => {
@@ -17,7 +35,15 @@ const isEntriesObject = (obj: unknown): obj is object => {
 }
 
 const isDischarge = (obj: unknown): obj is Discharge => {
-  return (!(obj === null) && (typeof obj === 'object') && ('date' in obj))
+  return (
+    !(obj === null)
+    && (typeof obj === 'object')
+    && Object.keys(dummyDischarge).every(k => Object.keys(obj).includes(k))
+  )
+}
+
+const isEmployerName = (data: unknown): data is string => {
+  return typeof data === 'string' || data instanceof String
 }
 
 const parseDiagnosisCodes = (object: unknown): Array<Diagnosis['code']> => {
@@ -29,15 +55,15 @@ const parseDiagnosisCodes = (object: unknown): Array<Diagnosis['code']> => {
   return object.diagnosisCodes as Array<Diagnosis['code']>;
 }
 
-const parseEntries = (entries: unknown): Array<Entry> => {
-  if (!isEntriesArray(entries)) {
+const parseEntries = (data: unknown): Array<Entry> => {
+  if (!isEntriesArray(data)) {
     throw new Error('Incorrect or missing entries.')
   }
 
   // We know that entries is an array, so now we can iterate through it
   // Lets check if it has a type property, and, if it does, let us make
   // sure it is one of the values we need rather than garbage.
-  entries.map(e => {
+  data.map(e => {
     if (isEntriesObject(e)) {
       // It is an object. Now we can make sure that the value in type
       // is acceptable.
@@ -50,75 +76,96 @@ const parseEntries = (entries: unknown): Array<Entry> => {
       }
     }
   })
-  return entries
+  return data
 }
 
-const parseType = (type: unknown): string => {
+const parseType = (data: unknown): string => {
   const types = [
     'HealthCheck',
     'OccupationalHealthcare',
     'Hospital'
   ]
-  if (!isString(type) || !(types.map(t => t.toString()).includes(type))) {
+  if (!isString(data) || !(types.map(t => t.toString()).includes(data))) {
     throw new Error('Incorrect or missing entries.')
   }
-  return type
+  return data
 }
 
-const parseName = (name: unknown): string => {
-  if (!isString(name)) {
+const parseName = (data: unknown): string => {
+  if (!isString(data)) {
     throw new Error('Incorrect or missing name.')
   }
-  return name
+  return data
 }
 
-const parseCriteria = (criteria: unknown): string => {
-  if (!isString(criteria)) {
+const parseCriteria = (data: unknown): string => {
+  if (!isString(data)) {
     throw new Error('Incorrect criteria.')
   }
-  return criteria
+  return data
 }
 
-const parseDescription = (description: unknown): string => {
-  if (!isString(description)) {
+const parseDescription = (data: unknown): string => {
+  if (!isString(data)) {
     throw new Error('Incorrect or missing description.')
   }
-  return description
+  return data
 }
 
-const parseSpecialist = (specialist: unknown): string => {
-  if (!isString(specialist)) {
+const parseSpecialist = (data: unknown): string => {
+  if (!isString(data)) {
     throw new Error('Incorrect or missing specialist.')
   }
-  return specialist
+  return data
 }
 
-const parseDate = (dateOfBirth: unknown): string => {
-  if (!isString(dateOfBirth)) {
+const parseDate = (data: unknown): string => {
+  if (!isString(data)) {
     throw new Error('Incorrect or missing date.')
   }
-  return dateOfBirth
+  return data
 }
 
-const parseSSN = (ssn: unknown): string => {
-  if (!isString(ssn)) {
+const parseSSN = (data: unknown): string => {
+  if (!isString(data)) {
     throw new Error('Incorrect or missing ssn.')
   }
-  return ssn
+  return data
 }
 
-const parseGender = (gender: unknown): Gender => {
-  if (!gender || !isString(gender) || !isGender(gender)) {
+const parseEmployerName = (data: unknown): string => {
+  if (!isEmployerName(data)) {
+    throw new Error('Incorrect or missing employer name')
+  }
+  return data
+}
+
+const parseSickLeave = (data: unknown): SickLeave => {
+  if (!data || !isSickLeave(data)) {
+    throw new Error('Incorrect or missing sick leave')
+  }
+  return data
+}
+
+const parseGender = (data: unknown): Gender => {
+  if (!data || !isString(data) || !isGender(data)) {
     throw new Error('Incorrect or missing gender identity.')
   }
-  return gender
+  return data
 }
 
-const parseOccupation = (occupation: unknown): string => {
-  if (!isString(occupation)) {
+// const parseDischarge = (data: unknown): Discharge => {
+//   if (!data || !isDischarge(data)) {
+//     throw new Error('Incorrect or missing Discharge.')
+//   }
+//   return data
+// }
+
+const parseOccupation = (data: unknown): string => {
+  if (!isString(data)) {
     throw new Error('Incorrect or missing occupation.')
   }
-  return occupation
+  return data
 }
 
 export const toNewPatient = (object: unknown): NewPatient => {
@@ -201,18 +248,36 @@ export const toNewEntries = (obj: unknown): NewEntries => {
         }
         throw new Error('Missing discharge information.')
         break
+
       case "OccupationalHealthcare":
-        // do stuff
+        if ('employerName' in obj) {
+          const buildFinal: NewEntries = 'sickLeave' in obj
+            ? {
+              ...initialObj,
+              type: 'OccupationalHealthcare',
+              employerName: parseEmployerName(obj.employerName),
+              sickLeave: parseSickLeave(obj.sickLeave)
+            }
+            : {
+              ...initialObj,
+              type: 'OccupationalHealthcare',
+              employerName: parseEmployerName(obj.employerName)
+            }
+          return buildFinal
+        }
         throw new Error('Incorrect or malformed data.')
         break
+
       case "HealthCheck":
         // do stuff
         throw new Error('Incorrect or malformed data.')
         break
+
       default:
         // do stuff
         throw new Error('Incorrect or malformed type.')
         break
+
     }
     return obj as NewEntries
   }

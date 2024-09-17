@@ -31,10 +31,17 @@ export interface Discharge {
   date: string;
   criteria?: string;
 }
+export const dummyDischarge = {
+  date: ''
+}
 
-interface SickLeave {
+export interface SickLeave {
   startDate: string;
   endDate: string;
+}
+export const dummySickLeave: SickLeave = {
+  startDate: '',
+  endDate: ''
 }
 
 interface BaseEntry {

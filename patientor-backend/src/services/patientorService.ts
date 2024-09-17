@@ -38,15 +38,15 @@ const addPatient = (entry: NewPatient): Patient => {
 const addPatientEntries = (patient: Patient, newEntry: NewEntries): Patient => {
   console.log(`adding entry for patient ${JSON.stringify(patient.name)}\nSuccess`)
 
-  const entryWithId = {
+  const entriesWithId = {
     ...newEntry,
     id: uuid()
   }
 
   const currentPatientId = patient.id
   const patientEntries = patient.entries
-  const modifiedEntries = patientEntries.concat(entryWithId)
 
+  const modifiedEntries = patientEntries.concat(entriesWithId)
   const updatedPatient = {
     ...patient,
     entries: modifiedEntries,
@@ -55,7 +55,7 @@ const addPatientEntries = (patient: Patient, newEntry: NewEntries): Patient => {
   // now replace patient in database with updatedPatient
   patientData.map(p => p.id !== currentPatientId
     ? p
-    : p.entries.push(entryWithId)
+    : p.entries.push(entriesWithId)
   )
 
   return updatedPatient
