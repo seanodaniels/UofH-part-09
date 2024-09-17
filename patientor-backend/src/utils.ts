@@ -236,6 +236,7 @@ export const toNewEntries = (obj: unknown): NewEntries => {
 
     switch (obj.type) {
       case "Hospital":
+
         if (
           ('discharge' in obj) && (isDischarge(obj.discharge))
         ) {
@@ -254,7 +255,6 @@ export const toNewEntries = (obj: unknown): NewEntries => {
               ...buildDischarge
             }
           }
-          console.log(`Final Build:\n${JSON.stringify(buildFinal)}\nComplete.`)
           return buildFinal
         }
         throw new Error('Missing discharge information.')

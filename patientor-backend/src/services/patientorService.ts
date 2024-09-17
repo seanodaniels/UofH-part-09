@@ -36,7 +36,7 @@ const addPatient = (entry: NewPatient): Patient => {
 }
 
 const addPatientEntries = (patient: Patient, newEntry: NewEntries): Patient => {
-  console.log(`adding entry for patient ${JSON.stringify(patient.name)}\nSuccess`)
+  console.log(`adding entry for patient ${JSON.stringify(patient.name)}\n`)
 
   const entriesWithId = {
     ...newEntry,
