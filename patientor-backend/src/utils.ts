@@ -7,18 +7,27 @@ import {
   Discharge,
   SickLeave,
   dummySickLeave,
-  dummyDischarge
+  dummyDischarge,
+  HealthCheckRating
 } from './types'
 
 const isString = (data: unknown): data is string => {
   return typeof data === 'string' || data instanceof String
 }
 
+const isNumber = (data: unknown): data is number => {
+  return typeof data === 'number' || data instanceof Number
+}
+
 const isGender = (data: string): data is Gender => {
   return Object.values(Gender).map(g => g.toString()).includes(data)
 }
 
-const isSickLeave = (obj: object): obj is SickLeave => {
+const isHealthCheckRating = (data: number): data is HealthCheckRating => {
+  return Object.values(HealthCheckRating).map(g => g.toString()).includes(data.toString())
+}
+
+const isSickLeave = (obj: unknown): obj is SickLeave => {
   return (
     obj !== null
     && typeof obj === 'object'
@@ -154,12 +163,14 @@ const parseGender = (data: unknown): Gender => {
   return data
 }
 
-// const parseDischarge = (data: unknown): Discharge => {
-//   if (!data || !isDischarge(data)) {
-//     throw new Error('Incorrect or missing Discharge.')
-//   }
-//   return data
-// }
+const parseHealthCheckRating = (data: unknown): HealthCheckRating => {
+  if (!data || !isNumber(data) || !isHealthCheckRating(data)) {
+    throw new Error('Incorrect or missing HealthCheckRating.')
+  }
+  return data
+}
+
+
 
 const parseOccupation = (data: unknown): string => {
   if (!isString(data)) {
@@ -251,6 +262,7 @@ export const toNewEntries = (obj: unknown): NewEntries => {
 
       case "OccupationalHealthcare":
         if ('employerName' in obj) {
+
           const buildFinal: NewEntries = 'sickLeave' in obj
             ? {
               ...initialObj,
@@ -269,7 +281,14 @@ export const toNewEntries = (obj: unknown): NewEntries => {
         break
 
       case "HealthCheck":
-        // do stuff
+        if ('healthCheckRating' in obj) {
+          const buildFinal: NewEntries = {
+            ...initialObj,
+            type: 'HealthCheck',
+            healthCheckRating: parseHealthCheckRating(obj.healthCheckRating)
+          }
+          return buildFinal
+        }
         throw new Error('Incorrect or malformed data.')
         break
 
