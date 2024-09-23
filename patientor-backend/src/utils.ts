@@ -1,5 +1,5 @@
 import {
-  Entry,
+  // Entry,
   NewPatient,
   Gender,
   NewEntries,
@@ -40,13 +40,13 @@ const isSickLeave = (obj: unknown): obj is SickLeave => {
   )
 }
 
-const isEntriesArray = (data: unknown): data is Array<Entry> => {
-  return Array.isArray(data)
-}
+// const isEntriesArray = (data: unknown): data is Array<Entry> => {
+//   return Array.isArray(data)
+// }
 
-const isEntriesObject = (obj: unknown): obj is object => {
-  return typeof obj === 'object'
-}
+// const isEntriesObject = (obj: unknown): obj is object => {
+//   return typeof obj === 'object'
+// }
 
 const isDischarge = (obj: unknown): obj is Discharge => {
   return (
@@ -69,29 +69,29 @@ const parseDiagnosisCodes = (object: unknown): Array<Diagnosis['code']> => {
   return object.diagnosisCodes as Array<Diagnosis['code']>
 }
 
-const parseEntries = (data: unknown): Array<Entry> => {
-  if (!isEntriesArray(data)) {
-    throw new Error('Incorrect or missing entries.')
-  }
+// const parseEntries = (data: unknown): Array<Entry> => {
+//   if (!isEntriesArray(data)) {
+//     throw new Error('Incorrect or missing entries.')
+//   }
 
-  // We know that entries is an array, so now we can iterate through it
-  // Lets check if it has a type property, and, if it does, let us make
-  // sure it is one of the values we need rather than garbage.
-  data.map(e => {
-    if (isEntriesObject(e)) {
-      // It is an object. Now we can make sure that the value in type
-      // is acceptable.
-      if (
-        (e.type !== EntriesType.OccupationalHealthcare)
-        && (e.type !== EntriesType.HealthCheck)
-        && (e.type !== EntriesType.Hospital)
-      ) {
-        throw new Error('Incorrect type. Check your syntax.')
-      }
-    }
-  })
-  return data
-}
+//   // We know that entries is an array, so now we can iterate through it
+//   // Lets check if it has a type property, and, if it does, let us make
+//   // sure it is one of the values we need rather than garbage.
+//   data.map(e => {
+//     if (isEntriesObject(e)) {
+//       // It is an object. Now we can make sure that the value in type
+//       // is acceptable.
+//       if (
+//         (e.type !== EntriesType.OccupationalHealthcare)
+//         && (e.type !== EntriesType.HealthCheck)
+//         && (e.type !== EntriesType.Hospital)
+//       ) {
+//         throw new Error('Incorrect type. Check your syntax.')
+//       }
+//     }
+//   })
+//   return data
+// }
 
 const parseType = (data: unknown): EntriesType => {
   if (!data || !isString(data) || !isEntriesType(data)) {
@@ -188,7 +188,6 @@ export const toNewPatient = (object: unknown): NewPatient => {
     && 'ssn' in object
     && 'gender' in object
     && 'occupation' in object
-    && 'entries' in object
   ) {
     const newEntry: NewPatient = {
       name: parseName(object.name),
@@ -196,7 +195,7 @@ export const toNewPatient = (object: unknown): NewPatient => {
       ssn: parseSSN(object.ssn),
       gender: parseGender(object.gender),
       occupation: parseOccupation(object.occupation),
-      entries: parseEntries(object.entries)
+      entries: []
     }
     return newEntry
   }

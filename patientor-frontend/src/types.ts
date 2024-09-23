@@ -45,19 +45,25 @@ interface SickLeave {
   endDate: string;
 }
 
-interface HealthCheckEntry extends BaseEntry {
-  type: "HealthCheck";
-  healthCheckRating: HealthCheckRating;
+export enum EntriesType {
+  Hospital = "Hospital",
+  OccupationalHealthcare = "OccupationalHealthcare",
+  HealthCheck = "HealthCheck"
 }
 
 interface OccupationalHealthcareEntry extends BaseEntry {
-  type: "OccupationalHealthcare";
+  type: EntriesType.OccupationalHealthcare;
   employerName: string;
   sickLeave?: SickLeave;
 }
 
+interface HealthCheckEntry extends BaseEntry {
+  type: EntriesType.HealthCheck;
+  healthCheckRating: HealthCheckRating;
+}
+
 interface HospitalEntry extends BaseEntry {
-  type: "Hospital";
+  type: EntriesType.Hospital;
   discharge: Discharge;
 }
 
@@ -72,3 +78,4 @@ type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit
 export type EntryWithoutId = UnionOmit<Entry, 'id'>;
 
 export type PatientFormValues = Omit<Patient, "id" | "entries">;
+export type EntriesFormValues = UnionOmit<Entry, 'id'>

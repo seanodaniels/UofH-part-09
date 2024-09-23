@@ -4,16 +4,19 @@ import { toNewPatient, toNewEntries } from '../utils'
 
 const router = express.Router()
 
+// Get diagnoses
 router.get('/diagnoses', (_req, res) => {
   console.log('req for diagnoses')
   res.send(patientorService.getDiagnoses())
 })
 
+// Get all patient
 router.get('/patients', (_req, res) => {
   console.log('req for patients get')
   res.send(patientorService.getSecurePatients())
 })
 
+// Get specific patient
 router.get('/patients/:id', (req, res) => {
   console.log('req for specific patient')
   const patient = patientorService.findSecurePatient(req.params.id)
@@ -24,6 +27,7 @@ router.get('/patients/:id', (req, res) => {
   }
 })
 
+// Add a new patient
 router.post('/patients', (req, res) => {
   console.log('request for adding a patient')
   try {
@@ -39,6 +43,7 @@ router.post('/patients', (req, res) => {
   }
 })
 
+// Add a new entry for an existing patient
 router.post('/patients/:id/entries', (req, res) => {
   console.log('attempting to add a patient entry')
 
