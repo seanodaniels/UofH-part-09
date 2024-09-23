@@ -8,7 +8,8 @@ import {
   SickLeave,
   dummySickLeave,
   dummyDischarge,
-  HealthCheckRating
+  HealthCheckRating,
+  EntriesType
 } from './types'
 
 const isString = (data: unknown): data is string => {
@@ -21,6 +22,10 @@ const isNumber = (data: unknown): data is number => {
 
 const isGender = (data: string): data is Gender => {
   return Object.values(Gender).map(g => g.toString()).includes(data)
+}
+
+const isEntriesType = (data: string): data is EntriesType => {
+  return Object.values(EntriesType).map(e => e.toString()).includes(data)
 }
 
 const isHealthCheckRating = (data: number): data is HealthCheckRating => {
@@ -58,10 +63,10 @@ const isEmployerName = (data: unknown): data is string => {
 const parseDiagnosisCodes = (object: unknown): Array<Diagnosis['code']> => {
   if (!object || typeof object !== 'object' || !('diagnosisCodes' in object)) {
     // we will just trust the data to be in correct form
-    return [] as Array<Diagnosis['code']>;
+    return [] as Array<Diagnosis['code']>
   }
 
-  return object.diagnosisCodes as Array<Diagnosis['code']>;
+  return object.diagnosisCodes as Array<Diagnosis['code']>
 }
 
 const parseEntries = (data: unknown): Array<Entry> => {
@@ -77,9 +82,9 @@ const parseEntries = (data: unknown): Array<Entry> => {
       // It is an object. Now we can make sure that the value in type
       // is acceptable.
       if (
-        (e.type !== 'OccupationalHealthcare')
-        && (e.type !== 'HealthCheck')
-        && (e.type !== 'Hospital')
+        (e.type !== EntriesType.OccupationalHealthcare)
+        && (e.type !== EntriesType.HealthCheck)
+        && (e.type !== EntriesType.Hospital)
       ) {
         throw new Error('Incorrect type. Check your syntax.')
       }
@@ -88,14 +93,16 @@ const parseEntries = (data: unknown): Array<Entry> => {
   return data
 }
 
-const parseType = (data: unknown): string => {
-  const types = [
-    'HealthCheck',
-    'OccupationalHealthcare',
-    'Hospital'
-  ]
-  if (!isString(data) || !(types.map(t => t.toString()).includes(data))) {
-    throw new Error('Incorrect or missing entries.')
+const parseType = (data: unknown): EntriesType => {
+  if (!data || !isString(data) || !isEntriesType(data)) {
+    throw new Error(`Incorrect or missing entries type. Data: ${data}. existence: ${data} isString: ${isString(data)}`)
+  }
+  return data
+}
+
+const parseGender = (data: unknown): Gender => {
+  if (!data || !isString(data) || !isGender(data)) {
+    throw new Error('Incorrect or missing gender identity.')
   }
   return data
 }
@@ -156,21 +163,12 @@ const parseSickLeave = (data: unknown): SickLeave => {
   return data
 }
 
-const parseGender = (data: unknown): Gender => {
-  if (!data || !isString(data) || !isGender(data)) {
-    throw new Error('Incorrect or missing gender identity.')
-  }
-  return data
-}
-
 const parseHealthCheckRating = (data: unknown): HealthCheckRating => {
   if (!data || !isNumber(data) || !isHealthCheckRating(data)) {
     throw new Error('Incorrect or missing HealthCheckRating.')
   }
   return data
 }
-
-
 
 const parseOccupation = (data: unknown): string => {
   if (!isString(data)) {
@@ -250,7 +248,7 @@ export const toNewEntries = (obj: unknown): NewEntries => {
             }
           const buildFinal: NewEntries = {
             ...initialObj,
-            type: 'Hospital',
+            type: EntriesType.Hospital,
             discharge: {
               ...buildDischarge
             }
@@ -266,13 +264,13 @@ export const toNewEntries = (obj: unknown): NewEntries => {
           const buildFinal: NewEntries = 'sickLeave' in obj
             ? {
               ...initialObj,
-              type: 'OccupationalHealthcare',
+              type: EntriesType.OccupationalHealthcare,
               employerName: parseEmployerName(obj.employerName),
               sickLeave: parseSickLeave(obj.sickLeave)
             }
             : {
               ...initialObj,
-              type: 'OccupationalHealthcare',
+              type: EntriesType.OccupationalHealthcare,
               employerName: parseEmployerName(obj.employerName)
             }
           return buildFinal
@@ -284,7 +282,7 @@ export const toNewEntries = (obj: unknown): NewEntries => {
         if ('healthCheckRating' in obj) {
           const buildFinal: NewEntries = {
             ...initialObj,
-            type: 'HealthCheck',
+            type: EntriesType.HealthCheck,
             healthCheckRating: parseHealthCheckRating(obj.healthCheckRating)
           }
           return buildFinal
