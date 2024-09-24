@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useMatch } from 'react-router-dom';
 import patientService from "../../services/patients";
-import { Patient, Entry } from "../../types";
+import { Patient, Entry, EntriesType } from "../../types";
 import { Favorite } from '@mui/icons-material';
 
 const PatientDetail = () => {
@@ -77,20 +77,20 @@ const PatientDetail = () => {
     return (
       <div>
         <h3>Entries</h3>
-        {
+        { 
           theEntries.map(p => {
             switch (p.type) {
-              case "HealthCheck":
+              case EntriesType.HealthCheck:
                 return (
-                  <div className="entryContainer">
+                  <div key={p.id} className="entryContainer">
                     <DisplayEntryBasics entry={p} />
                     <p><DisplayHeart heartType={p.healthCheckRating} /></p>
                   </div>
                 );
                 break;
-              case "OccupationalHealthcare":
+              case EntriesType.OccupationalHealthcare:
                 return  (
-                  <div className="entryContainer">
+                  <div key={p.id} className="entryContainer">
                     <DisplayEntryBasics entry={p} />
                     <p>Employer Name: {p.employerName}<br />
                     { p.sickLeave 
@@ -101,9 +101,9 @@ const PatientDetail = () => {
                   </div>
                 );
                 break;
-              case "Hospital": 
+              case EntriesType.Hospital: 
                 return (
-                  <div className="entryContainer">
+                  <div key={p.id} className="entryContainer">
                     <DisplayEntryBasics entry={p} />
                     <p>Discharge date: {p.discharge.date}<br />
                     { p.discharge.criteria
