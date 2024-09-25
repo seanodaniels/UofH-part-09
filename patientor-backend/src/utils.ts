@@ -95,7 +95,7 @@ const parseEntries = (data: unknown): Array<Entry> => {
 
 const parseType = (data: unknown): EntriesType => {
   if (!data || !isString(data) || !isEntriesType(data)) {
-    throw new Error(`Incorrect or missing entries type. Data: ${data}. existence: ${data} isString: ${isString(data)}`)
+    throw new Error(`Incorrect or missing entries type.`)
   }
   return data
 }
@@ -164,8 +164,8 @@ const parseSickLeave = (data: unknown): SickLeave => {
 }
 
 const parseHealthCheckRating = (data: unknown): HealthCheckRating => {
-  if (!data || !isNumber(data) || !isHealthCheckRating(data)) {
-    throw new Error('Incorrect or missing HealthCheckRating.')
+  if (typeof data === 'undefined' || !isNumber(data) || !isHealthCheckRating(data)) {
+    throw new Error(`Incorrect or missing HealthCheckRating. Error: ${data} problem: ${typeof data}`)
   }
   return data
 }

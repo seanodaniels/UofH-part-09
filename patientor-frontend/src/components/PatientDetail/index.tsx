@@ -1,14 +1,51 @@
 import { useState, useEffect } from 'react'
+import axios from 'axios';
 import { useMatch } from 'react-router-dom';
 import patientService from "../../services/patients";
-import { Patient, Entry, EntriesType } from "../../types";
+import { Patient, Entry, EntriesType, EntriesFormValues } from "../../types";
+import AddEntriesModal from "../../components/AddEntriesModal";
 import { Favorite } from '@mui/icons-material';
+import { Box, Table, Button, TableHead, Typography, TableCell, TableRow, TableBody } from '@mui/material';
 
 const PatientDetail = () => {
   const match = useMatch('/patient/:key');
 
   const [ patientInfo, setPatientInfo ] = useState<Patient>();
   const [ errorMessage, setErrorMessage ] = useState<string>('');
+
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [error, setError] = useState<string>();
+
+  const openModal = (): void => setModalOpen(true);
+
+  const closeModal = (): void => {
+    setModalOpen(false);
+    setError(undefined);
+  };
+
+  const submitNewEntries = async (values: EntriesFormValues) => {
+    if (patientInfo && patientInfo.id) {
+      console.log(`values: ${JSON.stringify(values)}`);
+      try {
+        const patientWithEntries = await patientService.updatePatientEntries(patientInfo.id, values);
+        setPatientInfo(patientWithEntries);
+        setModalOpen(false);
+      } catch(e: unknown) {
+        if (axios.isAxiosError(e)) {
+          if (e?.response?.data && typeof e?.response?.data === "string") {
+            const message = e.response.data.replace('Something went wrong. Error: ', '');
+            console.error(message);
+            setError(message);
+          } else {
+            setError("Unrecognized axios error");
+          }
+        } else {
+          console.error("Unknown error", e);
+          setError("Unknown error");
+        }
+       }
+    }
+  };
 
   useEffect(() => {
     const patientId = match?.params.key;
@@ -65,7 +102,7 @@ const PatientDetail = () => {
           {entry.diagnosisCodes && entry.diagnosisCodes.length > 0
             ? <div>
                  Diagnosis Codes:<br />
-                { entry.diagnosisCodes.map(c => <div>- {c}<br /></div>) }
+                { entry.diagnosisCodes.map(c => <div key={c}>- {c}<br /></div>) }
               </div>
             : null
           }
@@ -119,6 +156,16 @@ const PatientDetail = () => {
             }
           }
         )}
+        <AddEntriesModal
+          modalOpen={modalOpen}
+          onSubmit={submitNewEntries}
+          error={error}
+          onClose={closeModal}
+        />
+        <Button variant="contained" onClick={() => openModal()}>
+          Add New Entry
+        </Button>
+
       </div>
     );
   };
