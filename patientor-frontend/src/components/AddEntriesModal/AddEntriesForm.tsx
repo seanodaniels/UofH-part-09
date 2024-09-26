@@ -1,5 +1,5 @@
 import { useState, SyntheticEvent, useEffect } from "react";
-import {  TextField, InputLabel, MenuItem, Select, Grid, Button, SelectChangeEvent } from '@mui/material';
+import { TextField, InputLabel, MenuItem, Select, Grid, Button, SelectChangeEvent, Alert } from '@mui/material';
 import { 
   EntriesFormValues, 
   EntriesType,
@@ -21,6 +21,7 @@ const entriesTypeOptions: EntriesTypeOptions[] = Object.values(EntriesType).map(
 }));
 
 const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
+  const [ error, setError ] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [specialist, setSpecialist] = useState('');
@@ -139,9 +140,7 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
 
   const processHealthCheckRating = (ratingString: string): HealthCheckRating => {
     if (!ratingString || Number(ratingString) > 3 || Number(ratingString) < 0) {
-      throw new Error(
-        `Rating ${ratingString} is out of bounds. Must be equal to 0, 1, 2, or 3.`
-      );
+      setError(`Rating ${ratingString} is out of bounds. Must be equal to 0, 1, 2, or 3.`);
     }
     const constructRating = Number(ratingString);
     return constructRating;
@@ -149,6 +148,7 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
 
   return (
     <div id="entries-form">
+      {error && <Alert severity="error">{error}</Alert>}
       <InputLabel>Type</InputLabel>
         <Select
           label="Type"

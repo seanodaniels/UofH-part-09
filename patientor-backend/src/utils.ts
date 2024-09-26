@@ -70,7 +70,7 @@ const parseDiagnosisCodes = (object: unknown): Array<Diagnosis['code']> => {
 }
 
 const parseEntries = (data: unknown): Array<Entry> => {
-  if (!isEntriesArray(data)) {
+  if (!data || !isEntriesArray(data)) {
     throw new Error('Incorrect or missing entries.')
   }
 
@@ -108,49 +108,49 @@ const parseGender = (data: unknown): Gender => {
 }
 
 const parseName = (data: unknown): string => {
-  if (!isString(data)) {
+  if (!data || !isString(data)) {
     throw new Error('Incorrect or missing name.')
   }
   return data
 }
 
 const parseCriteria = (data: unknown): string => {
-  if (!isString(data)) {
+  if (!data || !isString(data)) {
     throw new Error('Incorrect criteria.')
   }
   return data
 }
 
 const parseDescription = (data: unknown): string => {
-  if (!isString(data)) {
+  if (!data || !isString(data)) {
     throw new Error('Incorrect or missing description.')
   }
   return data
 }
 
 const parseSpecialist = (data: unknown): string => {
-  if (!isString(data)) {
+  if (!data || !isString(data)) {
     throw new Error('Incorrect or missing specialist.')
   }
   return data
 }
 
 const parseDate = (data: unknown): string => {
-  if (!isString(data)) {
+  if (!data || !isString(data)) {
     throw new Error('Incorrect or missing date.')
   }
   return data
 }
 
 const parseSSN = (data: unknown): string => {
-  if (!isString(data)) {
+  if (!data || !isString(data)) {
     throw new Error('Incorrect or missing ssn.')
   }
   return data
 }
 
 const parseEmployerName = (data: unknown): string => {
-  if (!isEmployerName(data)) {
+  if (!data || !isEmployerName(data)) {
     throw new Error('Incorrect or missing employer name')
   }
   return data
@@ -171,7 +171,7 @@ const parseHealthCheckRating = (data: unknown): HealthCheckRating => {
 }
 
 const parseOccupation = (data: unknown): string => {
-  if (!isString(data)) {
+  if (!data || !isString(data)) {
     throw new Error('Incorrect or missing occupation.')
   }
   return data
