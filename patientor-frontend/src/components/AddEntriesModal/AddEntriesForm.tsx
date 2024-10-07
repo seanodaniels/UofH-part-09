@@ -250,17 +250,16 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
           className="entries-input" 
           required
         />
-        <div className="form-box-outline">
-        <InputLabel>Date</InputLabel>
-        <Input 
-          type="date" 
-          id="start" 
-          name="Date" 
-          value={date}
-          onChange={({ target }) => setDate(target.value)}
-          className="entries-input" 
-          required 
-        />        
+        <div className="form-box-outline entries-input">
+          <InputLabel>Date</InputLabel>
+          <Input 
+            type="date"
+            name="Date" 
+            value={date}
+            onChange={({ target }) => setDate(target.value)}
+            className="entries-input" 
+            required 
+          />        
         </div>
         <TextField
           label="Specialist"
@@ -287,14 +286,17 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
             </MenuItem>
           ))}
         </Select>
-        <TextField
-          label="Discharge Date"
-          fullWidth
-          value={dischargeDate}
-          onChange={({ target }) => setDischargeDate(target.value)}
-          className="entries-input" 
-          required
-        />
+        <div className="form-box-outline entries-input">
+          <InputLabel>Discharge Date</InputLabel>
+          <Input 
+            type="date" 
+            name="Discharge Date" 
+            value={dischargeDate}
+            onChange={({ target }) => setDischargeDate(target.value)}
+            className="entries-input" 
+            required 
+          />        
+        </div>
         <TextField
           label="Discharge Criteria"
           fullWidth
@@ -338,15 +340,17 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
           onChange={({ target }) => setDescription(target.value)}
           className="entries-input"
         />
-        <TextField
-          label="Date"
-          placeholder="YYYY-MM-DD"
-          fullWidth
-          value={date}
-          onChange={({ target }) => setDate(target.value)}
-          className="entries-input" 
-          required
-        />
+        <div className="form-box-outline entries-input">
+          <InputLabel>Date</InputLabel>
+          <Input 
+            type="date" 
+            name="Date" 
+            value={date}
+            onChange={({ target }) => setDate(target.value)}
+            className="entries-input" 
+            required 
+          />        
+        </div>
         <TextField
           label="Specialist"
           fullWidth
@@ -363,20 +367,28 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
           className="entries-input" 
           required
         />
-        <TextField
-          label="Sickleave Start"
-          fullWidth
-          value={sickLeaveStartDate}
-          onChange={({ target }) => setSickLeaveStartDate(target.value)}
-          className="entries-input" 
-        />
-        <TextField
-          label="Sickleave End"
-          fullWidth
-          value={sickLeaveEndDate}
-          onChange={({ target }) => setSickLeaveEndDate(target.value)}
-          className="entries-input" 
-        />
+        <div className="form-box-outline entries-input">
+          <InputLabel>Sickleave Start</InputLabel>
+          <Input 
+            type="date" 
+            name="Sickleave Start" 
+            value={sickLeaveStartDate}
+            onChange={({ target }) => setSickLeaveStartDate(target.value)}
+            className="entries-input" 
+            required 
+          />        
+        </div>
+        <div className="form-box-outline entries-input">
+          <InputLabel>Sickleave End</InputLabel>
+          <Input 
+            type="date" 
+            name="Sickleave End" 
+            value={sickLeaveEndDate}
+            onChange={({ target }) => setSickLeaveEndDate(target.value)}
+            className="entries-input" 
+            required 
+          />        
+        </div>
         <Grid>
           <Grid item>
             <Button
@@ -412,15 +424,17 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
           className="entries-input" 
           required
         />
-        <TextField
-          label="Date"
-          placeholder="YYYY-MM-DD"
-          fullWidth
-          value={date}
-          onChange={({ target }) => setDate(target.value)}
-          className="entries-input" 
-          required
-        />
+        <div className="form-box-outline entries-input">
+          <InputLabel>Date</InputLabel>
+          <Input 
+            type="date" 
+            name="Date" 
+            value={date}
+            onChange={({ target }) => setDate(target.value)}
+            className="entries-input" 
+            required 
+          />        
+        </div>
         <TextField
           label="Specialist"
           fullWidth

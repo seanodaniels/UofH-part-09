@@ -48,6 +48,12 @@ a.MuiButton-root {
   margin-bottom: 0.75rem;
 }
 
+#patient-form .entries-input {
+  margin-bottom: 0.75rem;
+}
+
 .form-box-outline {
-  border: 1px solid #000000;
+  border: 1px solid #bbbbbb;
+  border-radius: 4px;
+  padding: 0.75rem;
 }

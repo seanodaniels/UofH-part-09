@@ -1,6 +1,6 @@
 import { useState, SyntheticEvent } from "react";
 
-import {  TextField, InputLabel, MenuItem, Select, Grid, Button, SelectChangeEvent } from '@mui/material';
+import { Input, TextField, InputLabel, MenuItem, Select, Grid, Button, SelectChangeEvent } from '@mui/material';
 
 import { PatientFormValues, Gender } from "../../types";
 
@@ -48,40 +48,52 @@ const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
   };
 
   return (
-    <div>
+    <div id="patient-form">
       <form onSubmit={addPatient}>
         <TextField
           label="Name"
           fullWidth 
           value={name}
           onChange={({ target }) => setName(target.value)}
+          className="entries-input" 
+          required
         />
         <TextField
           label="Social security number"
           fullWidth
           value={ssn}
           onChange={({ target }) => setSsn(target.value)}
+          className="entries-input" 
+          required
         />
-        <TextField
-          label="Date of birth"
-          placeholder="YYYY-MM-DD"
-          fullWidth
-          value={dateOfBirth}
-          onChange={({ target }) => setDateOfBirth(target.value)}
-        />
+        <div className="form-box-outline entries-input">
+          <InputLabel>Date of birth</InputLabel>
+          <Input 
+            type="date"
+            name="Date of birth" 
+            value={dateOfBirth}
+            onChange={({ target }) => setDateOfBirth(target.value)}
+            className="entries-input" 
+            required 
+          />        
+        </div>
         <TextField
           label="Occupation"
           fullWidth
           value={occupation}
           onChange={({ target }) => setOccupation(target.value)}
+          className="entries-input" 
+          required
         />
 
         <InputLabel style={{ marginTop: 20 }}>Gender</InputLabel>
-        <Select
+        <Select 
           label="Gender"
           fullWidth
           value={gender}
           onChange={onGenderChange}
+          className="entries-input" 
+          required
         >
         {genderOptions.map(option =>
           <MenuItem
