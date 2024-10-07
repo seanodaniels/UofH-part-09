@@ -1,5 +1,6 @@
 import { useState, SyntheticEvent, useEffect } from "react";
 import { 
+  Input,
   TextField, 
   InputLabel, 
   MenuItem, 
@@ -11,12 +12,13 @@ import {
   Box } from '@mui/material';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import ListItemText from '@mui/material/ListItemText';
-import Checkbox from '@mui/material/Checkbox';  
+import Checkbox from '@mui/material/Checkbox'; 
 import { 
   EntriesFormValues, 
   EntriesType,
   HealthCheckRating 
 } from "../../types";
+import diagnosisCodesList from '../../codes.ts';
 
 interface Props {
   onCancel: () => void;
@@ -48,19 +50,6 @@ const healthCheckRatingOptions: HealthCheckRatingOptions[] =
     });
   }
 );
-
-const diagnosisCodesList = [
-  "A23.1",
-  "F31.5",
-  "K38.2",
-  "L60.1",
-  "M51.2",
-  "N30.0",
-  "Q03.8",
-  "S62.5",
-  "Z57.1",
-  "Z74.3",
-];
 
 const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
   const [ error, setError ] = useState('');
@@ -261,15 +250,18 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
           className="entries-input" 
           required
         />
-        <TextField
-          label="Date"
-          placeholder="YYYY-MM-DD"
-          fullWidth
+        <div className="form-box-outline">
+        <InputLabel>Date</InputLabel>
+        <Input 
+          type="date" 
+          id="start" 
+          name="Date" 
           value={date}
           onChange={({ target }) => setDate(target.value)}
-          className="entries-input"
+          className="entries-input" 
           required 
-        />
+        />        
+        </div>
         <TextField
           label="Specialist"
           fullWidth
@@ -279,7 +271,7 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
           required
         />
         <InputLabel>Diagnosis Codes</InputLabel>
-        <Select
+        <Select       
           label="DiagnosisCodes"
           multiple 
           onChange={diagnosisCodesChange}
@@ -295,13 +287,6 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
             </MenuItem>
           ))}
         </Select>
-        {/* <TextField
-          label="Diagnosis Codes"
-          fullWidth
-          value={diagnosisCodes}
-          onChange={({ target }) => setDiagnosisCodes(processDiagnosisCodes(target.value))}
-          className="entries-input" 
-        /> */}
         <TextField
           label="Discharge Date"
           fullWidth
@@ -351,8 +336,7 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
           fullWidth 
           value={description}
           onChange={({ target }) => setDescription(target.value)}
-          className="entries-input" 
-          required
+          className="entries-input"
         />
         <TextField
           label="Date"
