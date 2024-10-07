@@ -1,5 +1,17 @@
 import { useState, SyntheticEvent, useEffect } from "react";
-import { TextField, InputLabel, MenuItem, Select, Grid, Button, SelectChangeEvent, Alert } from '@mui/material';
+import { 
+  TextField, 
+  InputLabel, 
+  MenuItem, 
+  Select, 
+  Grid, 
+  Button, 
+  SelectChangeEvent, 
+  Alert, 
+  Box } from '@mui/material';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import ListItemText from '@mui/material/ListItemText';
+import Checkbox from '@mui/material/Checkbox';  
 import { 
   EntriesFormValues, 
   EntriesType,
@@ -20,13 +32,43 @@ const entriesTypeOptions: EntriesTypeOptions[] = Object.values(EntriesType).map(
   value: v, label: v.toString()
 }));
 
+interface HealthCheckRatingOptions {
+  value: HealthCheckRating;
+  label: string;
+}
+
+const StringIsNumber = (value:string) => isNaN(Number(value)) === false;
+
+const healthCheckRatingOptions: HealthCheckRatingOptions[] = 
+  Object.keys(HealthCheckRating)
+  .filter(StringIsNumber)
+  .map(v => {
+    return ({
+      value: Number(v), label: v.toString()
+    });
+  }
+);
+
+const diagnosisCodesList = [
+  "A23.1",
+  "F31.5",
+  "K38.2",
+  "L60.1",
+  "M51.2",
+  "N30.0",
+  "Q03.8",
+  "S62.5",
+  "Z57.1",
+  "Z74.3",
+];
+
 const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
   const [ error, setError ] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [specialist, setSpecialist] = useState('');
   const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([]);
-  const [entriesType, setEntriesType] = useState<EntriesType>(EntriesType.HealthCheck);
+  const [entriesType, setEntriesType] = useState<EntriesType>(EntriesType.Hospital);
   const [dischargeDate, setDischargeDate] = useState('');
   const [dischargeCriteria, setDischargeCriteria] = useState('');
   const [employerName, setEmployerName] = useState('');
@@ -64,6 +106,10 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
               
   }, [entriesType]);
 
+  /*
+     Event Handlers
+     ==========================================================================
+  */
   const onEntriesTypeChange = (event: SelectChangeEvent<string>) => {
     event.preventDefault();
     if ( typeof event.target.value === "string") {
@@ -86,23 +132,56 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
           setEntriesType(EntriesType.Hospital);
           break;
       }
-
     }
+  };
+
+  const onHealthCheckRatingChange = (event: SelectChangeEvent<string>) => {
+    event.preventDefault();
+    if ( typeof event.target.value === "string") {
+      const value = event.target.value;
+      const healthCheckType = Object.values(HealthCheckRating).find(g => g.toString() === value);
+      switch (healthCheckType) {
+        case 0:
+          setHealthCheckRating(0);
+          break;
+        case 1:
+          setHealthCheckRating(1);
+          break;
+        case 2:
+          setHealthCheckRating(2);
+          break;
+        case 3:
+          setHealthCheckRating(3);
+          break;
+        default:
+          setHealthCheckRating(0);
+          break;
+      }
+    }
+  };
+
+  const diagnosisCodesChange = (event: SelectChangeEvent<typeof diagnosisCodes>) => {
+    const {
+      target: { value },
+    } = event;
+    console.log('value: ', value);
+    const sdcArray = typeof value === 'string' ? value.split(',') : value;
+    setDiagnosisCodes(sdcArray);
   };
 
   const addEntriesHospital = (event: SyntheticEvent) => {
     event.preventDefault();
-    onSubmit({
-      type: EntriesType.Hospital,
-      description,
-      date,
-      specialist,
-      diagnosisCodes,
-      discharge: {
-        date: dischargeDate,
-        criteria: dischargeCriteria
-      }
-    });
+      onSubmit({
+        type: EntriesType.Hospital,
+        description,
+        date,
+        specialist,
+        diagnosisCodes,
+        discharge: {
+          date: dischargeDate,
+          criteria: dischargeCriteria
+        }
+      });
   };
 
   const addEntriesOccupationalHealthcare = (event: SyntheticEvent) => {
@@ -133,6 +212,10 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
     });
   };
 
+  /*
+     Form Validation
+     ==========================================================================
+  */
   const processDiagnosisCodes = (codeString: string): Array<string> => {
     const constructArray = codeString.split(',');
     return constructArray;
@@ -146,8 +229,13 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
     return constructRating;
   };
 
+  /*
+    Component Main
+    ==========================================================================
+  */
   return (
     <div id="entries-form">
+      <p>codes: { diagnosisCodes[0] } || typeof: { typeof diagnosisCodes }</p>
       {error && <Alert severity="error">{error}</Alert>}
       <InputLabel>Type</InputLabel>
         <Select
@@ -164,13 +252,14 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
           )}
         </Select>
 
-        <form onSubmit={addEntriesHospital} className={showHospital ? 'showForm' : 'hideForm'}>
+      <Box component="form" onSubmit={addEntriesHospital} className={showHospital ? 'showForm' : 'hideForm'}>
         <TextField
           label="Description"
           fullWidth 
           value={description}
           onChange={({ target }) => setDescription(target.value)}
           className="entries-input" 
+          required
         />
         <TextField
           label="Date"
@@ -178,7 +267,8 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
           fullWidth
           value={date}
           onChange={({ target }) => setDate(target.value)}
-          className="entries-input" 
+          className="entries-input"
+          required 
         />
         <TextField
           label="Specialist"
@@ -186,20 +276,39 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
           value={specialist}
           onChange={({ target }) => setSpecialist(target.value)}
           className="entries-input" 
+          required
         />
-        <TextField
+        <InputLabel>Diagnosis Codes</InputLabel>
+        <Select
+          label="DiagnosisCodes"
+          multiple 
+          onChange={diagnosisCodesChange}
+          value={diagnosisCodes}
+          className="entries-input" 
+          input={<OutlinedInput label="Tag" />}
+          renderValue={(selected) => selected.join(', ')} 
+        >
+          {diagnosisCodesList.map(c => (
+            <MenuItem key={c} value={c}>
+              <Checkbox checked={diagnosisCodes.includes(c)} />
+              <ListItemText primary={c} />
+            </MenuItem>
+          ))}
+        </Select>
+        {/* <TextField
           label="Diagnosis Codes"
           fullWidth
           value={diagnosisCodes}
           onChange={({ target }) => setDiagnosisCodes(processDiagnosisCodes(target.value))}
           className="entries-input" 
-        />
+        /> */}
         <TextField
           label="Discharge Date"
           fullWidth
           value={dischargeDate}
           onChange={({ target }) => setDischargeDate(target.value)}
           className="entries-input" 
+          required
         />
         <TextField
           label="Discharge Criteria"
@@ -207,6 +316,7 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
           value={dischargeCriteria}
           onChange={({ target }) => setDischargeCriteria(target.value)}
           className="entries-input" 
+          required
         />
         <Grid>
           <Grid item>
@@ -232,15 +342,17 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
             </Button>
           </Grid>
         </Grid>
-      </form>
+      </Box>
 
-      <form onSubmit={addEntriesOccupationalHealthcare} className={showOccupationalHealthcare ? 'showForm' : 'hideForm'}>
+      <Box component="form" onSubmit={addEntriesOccupationalHealthcare} className={showOccupationalHealthcare ? 'showForm' : 'hideForm'}>
         <TextField
+          required 
           label="Description"
           fullWidth 
           value={description}
           onChange={({ target }) => setDescription(target.value)}
           className="entries-input" 
+          required
         />
         <TextField
           label="Date"
@@ -249,6 +361,7 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
           value={date}
           onChange={({ target }) => setDate(target.value)}
           className="entries-input" 
+          required
         />
         <TextField
           label="Specialist"
@@ -256,13 +369,7 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
           value={specialist}
           onChange={({ target }) => setSpecialist(target.value)}
           className="entries-input" 
-        />
-        <TextField
-          label="Diagnosis Codes"
-          fullWidth
-          value={diagnosisCodes}
-          onChange={({ target }) => setDiagnosisCodes(processDiagnosisCodes(target.value))}
-          className="entries-input" 
+          required
         />
         <TextField
           label="Employer Name"
@@ -270,6 +377,7 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
           value={employerName}
           onChange={({ target }) => setEmployerName(target.value)}
           className="entries-input" 
+          required
         />
         <TextField
           label="Sickleave Start"
@@ -309,15 +417,16 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
             </Button>
           </Grid>
         </Grid>
-      </form>
+      </Box>
 
-      <form onSubmit={addEntriesHealthCheck} className={showHealthCheck ? 'showForm' : 'hideForm'}>
+      <Box component="form" onSubmit={addEntriesHealthCheck} className={showHealthCheck ? 'showForm' : 'hideForm'}>
         <TextField
           label="Description"
           fullWidth 
           value={description}
           onChange={({ target }) => setDescription(target.value)}
           className="entries-input" 
+          required
         />
         <TextField
           label="Date"
@@ -326,6 +435,7 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
           value={date}
           onChange={({ target }) => setDate(target.value)}
           className="entries-input" 
+          required
         />
         <TextField
           label="Specialist"
@@ -333,14 +443,29 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
           value={specialist}
           onChange={({ target }) => setSpecialist(target.value)}
           className="entries-input" 
+          required
         />
-        <TextField
+        {/* <TextField
           label="Health Check Rating"
           fullWidth
           value={healthCheckRating}
           onChange={({ target }) => setHealthCheckRating(processHealthCheckRating(target.value))}
           className="entries-input" 
-        />
+          required
+        /> */}
+        <InputLabel>Health Check Rating</InputLabel>
+        <Select
+          label="HealthCheckRating"
+          value={healthCheckRating.toString()}
+          onChange={onHealthCheckRatingChange}
+          className="entries-input"
+        >
+          {healthCheckRatingOptions.map(option => 
+            <MenuItem key={option.label} value={option.value}>
+              {option.value}
+            </MenuItem>
+            )}
+        </Select>
         <Grid>
           <Grid item>
             <Button
@@ -365,7 +490,7 @@ const AddEntriesForm = ({ onCancel, onSubmit }: Props) => {
             </Button>
           </Grid>
         </Grid>
-      </form>
+      </Box>
     </div>
   );
 };

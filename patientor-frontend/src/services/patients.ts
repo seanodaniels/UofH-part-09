@@ -29,12 +29,11 @@ const create = async (object: PatientFormValues) => {
   return data;
 };
 
-const updatePatientEntries = async (id: string, object: EntriesFormValues) => {
-  const { data } = await axios.post<EntriesFormValues>(
+const updatePatientEntries = async (id: string, object: EntriesFormValues): Promise<Patient> => {
+  const { data } = await axios.post<Patient>(
     `${apiBaseUrl}/patients/${id}/entries`,
     object
   );
-
   return data;
 };
 

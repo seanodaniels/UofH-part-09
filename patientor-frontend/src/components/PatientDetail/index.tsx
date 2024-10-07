@@ -24,11 +24,11 @@ const PatientDetail = () => {
   };
 
   const submitNewEntries = async (values: EntriesFormValues) => {
-    if (patientInfo && patientInfo.id) {
-      console.log(`values: ${JSON.stringify(values)}`);
+    event?.preventDefault()
+    if (patientInfo && patientInfo.id) {    
       try {
-        const patientWithEntries = await patientService.updatePatientEntries(patientInfo.id, values);
-        setPatientInfo(patientWithEntries);
+        const newPatient = await patientService.updatePatientEntries(patientInfo.id, values);
+        setPatientInfo(newPatient);
         setModalOpen(false);
       } catch(e: unknown) {
         if (axios.isAxiosError(e)) {
@@ -165,7 +165,6 @@ const PatientDetail = () => {
         <Button variant="contained" onClick={() => openModal()}>
           Add New Entry
         </Button>
-
       </div>
     );
   };
